@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Leo English Lab — A1 Complete Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700;900&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#D4AF37; --gold-light:#F0D060; --gold-dim:#8a6f1e;
+  --carbon:#0e0e0e; --card-bg:#1a1a1a; --card-border:#2e2e2e;
+  --white:#f5f5f5; --grey:#888; --green:#3ddc84; --red:#ff4f4f; --blue:#4fa3ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--carbon);color:var(--white);font-family:'Noto Sans Myanmar','Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(--carbon);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity .8s ease}
+#splash.hide{opacity:0;pointer-events:none}
+.splash-logo{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,5vw,2.6rem);font-weight:900;color:var(--gold);letter-spacing:2px;text-align:center;animation:glow 2s ease-in-out infinite alternate;line-height:1.3}
+.splash-sub{font-size:clamp(.85rem,2.5vw,1.1rem);color:var(--grey);margin-top:12px;text-align:center}
+.splash-bar-wrap{width:240px;height:5px;background:#222;border-radius:99px;margin-top:40px;overflow:hidden}
+.splash-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:99px;animation:loadbar 2.4s ease forwards}
+@keyframes loadbar{to{width:100%}}
+@keyframes glow{from{text-shadow:0 0 10px #d4af3744}to{text-shadow:0 0 30px #d4af3799,0 0 60px #d4af3744}}
+
+/* HEADER */
+header{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--card-border);background:#111;position:sticky;top:0;z-index:100}
+.brand{font-family:'Orbitron',sans-serif;font-size:clamp(.6rem,1.8vw,.85rem);font-weight:900;color:var(--gold);letter-spacing:1px;line-height:1.3;flex-shrink:0}
+.brand span{display:block;font-size:.7em;color:var(--grey);font-family:'Space Grotesk',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.xp-bar-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.xp-label{font-size:.7rem;color:var(--gold);font-weight:700;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
+.xp-track{flex:1;height:7px;background:#2a2a2a;border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:99px;transition:width .5s cubic-bezier(.4,2,.6,1)}
+.hearts{display:flex;gap:3px;flex-shrink:0}
+.heart{font-size:.95rem;transition:transform .3s}
+.heart.lost{opacity:.2;transform:scale(.8)}
+
+/* APP */
+#app{display:none}
+#app.visible{display:block}
+
+/* HOME */
+#screen-home{max-width:680px;margin:0 auto;padding:24px 16px 80px}
+.home-hero{text-align:center;margin-bottom:30px}
+.home-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.2rem,4vw,2rem);font-weight:900;color:var(--gold);line-height:1.25}
+.home-subtitle{font-size:clamp(.82rem,2.2vw,.98rem);color:var(--grey);margin-top:10px;line-height:1.7}
+.tiktok-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#ff0050 0%,#010101 50%,#5ce1e6 100%);color:white;font-size:.7rem;font-weight:700;padding:5px 14px;border-radius:99px;margin-top:12px;letter-spacing:1px;font-family:'Space Grotesk',sans-serif}
+.lessons-title{font-size:.7rem;color:var(--grey);text-transform:uppercase;letter-spacing:3px;font-family:'Space Grotesk',sans-serif;text-align:center;margin-bottom:16px}
+
+.map-path{display:flex;flex-direction:column;align-items:center}
+.lesson-node{width:100%;max-width:420px}
+.connector{width:2px;height:24px;background:linear-gradient(to bottom,var(--gold-dim),#222);margin:0 auto}
+.lesson-btn{width:100%;background:var(--card-bg);border:2px solid var(--card-border);border-radius:18px;padding:14px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:all .22s ease;position:relative;overflow:hidden;text-align:left}
+.lesson-btn:not(.locked):hover{transform:translateY(-2px);box-shadow:0 8px 24px #00000060}
+.lesson-btn.active{border-color:var(--gold);box-shadow:0 0 18px #d4af3728}
+.lesson-btn.done{border-color:var(--green)}
+.lesson-btn.locked{opacity:.35;cursor:not-allowed}
+.lesson-btn.boss{border-color:#b06aff !important}
+.lesson-btn.boss.active{box-shadow:0 0 24px #b06aff44 !important}
+.lesson-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background:#222}
+.lesson-btn.active .lesson-icon{background:linear-gradient(135deg,var(--gold-dim),#5a3f00)}
+.lesson-btn.done .lesson-icon{background:linear-gradient(135deg,#0d3a1f,#1a5c30)}
+.lesson-btn.boss .lesson-icon{background:linear-gradient(135deg,#3a0060,#8020c0)}
+.lesson-info{flex:1;min-width:0}
+.lesson-num{font-size:.62rem;color:var(--grey);text-transform:uppercase;letter-spacing:2px;font-family:'Space Grotesk',sans-serif}
+.lesson-name{font-size:.9rem;font-weight:700;color:var(--white);margin-top:2px}
+.lesson-name-en{font-size:.72rem;color:var(--gold);font-family:'Space Grotesk',sans-serif;margin-top:2px}
+.lesson-btn.boss .lesson-name-en{color:#b06aff}
+.stars-row{display:flex;gap:2px;margin-top:4px}
+.lesson-status{font-size:1.1rem;flex-shrink:0}
+
+/* LESSON SCREEN */
+#screen-lesson{max-width:640px;margin:0 auto;padding:20px 16px 80px;display:none}
+#screen-lesson.visible{display:block}
+.lesson-header{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.back-btn{width:36px;height:36px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:border-color .2s;flex-shrink:0}
+.back-btn:hover{border-color:var(--gold)}
+.progress-wrap{flex:1}
+.progress-track{height:7px;background:#222;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:99px;transition:width .4s cubic-bezier(.4,2,.6,1)}
+.progress-label{font-size:.65rem;color:var(--grey);margin-top:4px;font-family:'Space Grotesk',sans-serif}
+
+/* LEARN CARD */
+.learn-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:22px;padding:22px 18px;margin-bottom:16px;animation:slideUp .35s ease}
+.slide-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.slide-dots{display:flex;gap:6px;align-items:center}
+.slide-dot{width:8px;height:8px;border-radius:50%;background:#333;transition:all .25s}
+.slide-dot.active{background:var(--gold);width:20px;border-radius:4px}
+.slide-counter{font-size:.65rem;color:var(--grey);font-family:'Space Grotesk',sans-serif;letter-spacing:1px}
+.learn-card h2{font-family:'Orbitron',sans-serif;font-size:.92rem;color:var(--gold);margin-bottom:13px;line-height:1.4}
+.learn-section{margin-bottom:13px;padding:12px 14px;background:#222;border-radius:12px;border-left:3px solid var(--gold)}
+.learn-section h3{font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-family:'Space Grotesk',sans-serif;margin-bottom:7px}
+.learn-section p{font-size:.88rem;line-height:1.9;color:var(--white);white-space:pre-line}
+.leo-tip{background:#1a1500;border:1px solid var(--gold-dim);border-radius:12px;padding:12px 14px;margin-top:13px}
+.leo-tip-label{font-size:.68rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-family:'Space Grotesk',sans-serif;margin-bottom:6px}
+.leo-tip p{font-size:.86rem;line-height:1.75;color:#ccc}
+
+.slide-nav{display:flex;gap:10px;margin-top:18px}
+.slide-prev-btn{flex:1;padding:13px;background:#222;border:1px solid #333;border-radius:13px;color:var(--grey);font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.slide-prev-btn:hover{border-color:var(--gold);color:var(--gold)}
+.slide-next-btn{flex:2;padding:13px;background:linear-gradient(135deg,var(--gold-dim),#3a2800);border:1px solid var(--gold);border-radius:13px;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.slide-next-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--carbon)}
+.got-it-btn{flex:2;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--carbon);border:none;border-radius:13px;font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 16px #d4af3732;transition:transform .2s}
+.got-it-btn:hover{transform:translateY(-2px)}
+
+/* Q CARD */
+.q-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:22px;padding:22px 18px;margin-bottom:14px;animation:slideUp .32s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.q-type-badge{display:inline-block;background:#222;color:var(--gold);font-size:.6rem;font-weight:700;padding:4px 11px;border-radius:99px;letter-spacing:2px;text-transform:uppercase;font-family:'Space Grotesk',sans-serif;margin-bottom:11px}
+.q-text{font-size:clamp(.92rem,2.6vw,1.15rem);font-weight:700;line-height:1.65;color:var(--white)}
+.q-sub{font-size:.82rem;color:var(--grey);margin-top:5px;line-height:1.5}
+.q-emoji-big{font-size:3.2rem;text-align:center;display:block;margin:12px 0 4px}
+
+/* OPTIONS */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.opt-btn{background:#222;border:2px solid var(--card-border);border-radius:13px;padding:12px 13px;color:var(--white);font-size:.88rem;font-family:'Noto Sans Myanmar','Space Grotesk',sans-serif;cursor:pointer;transition:all .2s ease;text-align:center;line-height:1.5}
+.opt-btn:hover:not(.answered):not([disabled]){border-color:var(--gold);background:#2a2a1a;transform:translateY(-2px)}
+.opt-btn.correct{border-color:var(--green)!important;background:#0d3320!important;color:var(--green)!important;animation:bounceIn .32s ease}
+.opt-btn.wrong{border-color:var(--red)!important;background:#3d1010!important;color:var(--red)!important;animation:shake .32s ease}
+@keyframes bounceIn{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* FEEDBACK */
+.feedback-panel{border-radius:17px;padding:15px 17px;display:none;animation:slideUp .28s ease;margin-top:0}
+.feedback-panel.correct{display:block;background:#0a2a18;border:1px solid var(--green)}
+.feedback-panel.wrong{display:block;background:#2a0a0a;border:1px solid var(--red)}
+.feedback-title{font-size:.92rem;font-weight:700;margin-bottom:5px}
+.feedback-panel.correct .feedback-title{color:var(--green)}
+.feedback-panel.wrong .feedback-title{color:var(--red)}
+.feedback-text{font-size:.85rem;color:var(--white);line-height:1.68}
+.next-btn{width:100%;padding:14px;border-radius:13px;border:none;font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:11px;letter-spacing:1px;transition:transform .2s}
+.next-btn.correct{background:linear-gradient(135deg,var(--green),#28a060);color:var(--carbon);box-shadow:0 3px 16px #3ddc8430}
+.next-btn.wrong{background:linear-gradient(135deg,#ff6060,#cc2020);color:white}
+.next-btn:hover{transform:translateY(-2px)}
+
+/* TAP */
+.answer-tray{display:flex;flex-wrap:wrap;gap:7px;min-height:42px;padding:9px 11px;border:2px dashed #333;border-radius:11px;margin-top:11px;background:#161616;transition:border-color .2s}
+.answer-tray.has-items{border-color:var(--gold-dim)}
+.word-bank{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.word-chip{background:#222;border:2px solid #333;border-radius:8px;padding:7px 12px;font-size:.85rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;color:var(--white);transition:all .18s;font-weight:600}
+.word-chip:hover{border-color:var(--gold);background:#2a2a1a}
+.word-chip.used{opacity:.2;cursor:not-allowed}
+.answer-chip{background:var(--gold-dim);border:none;border-radius:8px;padding:7px 12px;font-size:.85rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;color:var(--white);font-weight:600;transition:opacity .18s}
+.answer-chip:hover{opacity:.7}
+
+/* FILL */
+.fill-input{width:100%;padding:12px 14px;background:#222;border:2px solid #333;border-radius:12px;color:var(--white);font-size:.95rem;font-family:'Space Grotesk',sans-serif;margin-top:13px;outline:none;transition:border-color .2s}
+.fill-input:focus{border-color:var(--gold)}
+.fill-input.correct-input{border-color:var(--green);background:#0d3320}
+.fill-input.wrong-input{border-color:var(--red);background:#3d1010}
+.check-btn{width:100%;padding:13px;background:#222;border:1px solid #444;border-radius:12px;color:var(--white);font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:10px;letter-spacing:1px;transition:all .2s}
+.check-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* COMPLETE */
+#screen-complete{display:none;text-align:center;max-width:500px;margin:0 auto;padding:44px 18px 80px}
+#screen-complete.visible{display:block;animation:slideUp .5s ease}
+.complete-icon{font-size:4.2rem;display:block;margin-bottom:16px;animation:spinIn .6s ease}
+@keyframes spinIn{from{transform:rotate(-20deg) scale(.5);opacity:0}to{transform:rotate(0) scale(1);opacity:1}}
+.complete-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:900;color:var(--gold);margin-bottom:8px}
+.complete-subtitle{font-size:.9rem;color:var(--grey);line-height:1.7}
+.stats-row{display:flex;justify-content:center;gap:12px;margin:22px 0;flex-wrap:wrap}
+.stat-box{background:var(--card-bg);border:1px solid var(--card-border);border-radius:13px;padding:13px 18px;min-width:86px}
+.stat-val{font-size:1.7rem;font-weight:900;color:var(--gold);font-family:'Orbitron',sans-serif}
+.stat-lbl{font-size:.68rem;color:var(--grey);margin-top:2px;font-family:'Space Grotesk',sans-serif}
+.complete-btns{display:flex;flex-direction:column;gap:10px}
+.home-again-btn{padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--carbon);border:none;border-radius:13px;font-family:'Orbitron',sans-serif;font-size:.88rem;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 16px #d4af3732;transition:transform .2s}
+.home-again-btn:hover{transform:translateY(-2px)}
+.retry-btn{padding:14px;background:#222;border:1px solid #444;color:var(--grey);border-radius:13px;font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.retry-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* PARTICLES */
+.particle-container{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
+.particle{position:absolute;font-size:1.3rem;animation:fly 1s ease forwards;pointer-events:none}
+@keyframes fly{from{transform:translateY(0) scale(1);opacity:1}to{transform:translateY(-100px) scale(.3);opacity:0}}
+
+/* BOSS SCREEN */
+.boss-intro{background:linear-gradient(135deg,#1a0030,#0e0e0e);border:1px solid #b06aff;border-radius:22px;padding:24px 20px;margin-bottom:16px;text-align:center;animation:slideUp .4s ease}
+.boss-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:#b06aff;margin:12px 0 8px}
+.boss-sub{font-size:.9rem;color:#ccc;line-height:1.7}
+.boss-rules{background:#1a0030;border:1px solid #4a2060;border-radius:12px;padding:12px 14px;margin:14px 0;text-align:left}
+.boss-rules p{font-size:.85rem;color:#ccc;line-height:1.8}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#111}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+@media(max-width:440px){.options-grid{grid-template-columns:1fr}.stats-row{gap:9px}.stat-box{padding:11px 13px;min-width:78px}}
+</style>
+</head>
+<body>
+<div class="particle-container" id="particles"></div>
+
+<div id="splash">
+  <div class="splash-logo">MR. LEO<br>ENGLISH LAB</div>
+  <div class="splash-sub">A1 Complete Guide · ၁ မှ ရေလည်အောင်</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="brand">MR. LEO ENGLISH LAB<span>A1 COMPLETE GUIDE</span></div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">XP</div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+      <div class="xp-label" id="xpVal">0</div>
+    </div>
+    <div class="hearts" id="heartsDisplay">
+      <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+    </div>
+  </header>
+
+  <div id="screen-home">
+    <div class="home-hero">
+      <div class="home-title">STOP TRANSLATING<br>START THINKING IN ENGLISH</div>
+      <div class="home-subtitle">A1 Complete Guide — အင်္ဂလိပ်အခြေခံ ၁ မှ ၁၄ သင်ခန်းစာ ✨</div>
+      <div class="tiktok-badge">📱 @MrLeoEnglishLab · FREE FOR ALL</div>
+    </div>
+    <div class="lessons-title">LESSON MAP — သင်ခန်းစာ မြေပုံ</div>
+    <div class="map-path" id="lessonMap"></div>
+  </div>
+
+  <div id="screen-lesson">
+    <div class="lesson-header">
+      <div class="back-btn" onclick="goHome()">←</div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">0 / 0</div>
+      </div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+
+  <div id="screen-complete">
+    <span class="complete-icon" id="completeIcon">🏆</span>
+    <div class="complete-title" id="completeTitle">LESSON COMPLETE!</div>
+    <div class="complete-subtitle" id="completeSubtitle"></div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val" id="statCorrect">0</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-box"><div class="stat-val" id="statXP">+0</div><div class="stat-lbl">XP Earned</div></div>
+      <div class="stat-box"><div class="stat-val" id="statStars">⭐</div><div class="stat-lbl">Stars</div></div>
+    </div>
+    <div class="complete-btns">
+      <button class="retry-btn" id="retryBtn" onclick="retryLesson()">🔄 RETRY (မေးခွန်းသစ်နဲ့ ထပ်ကြိုးစား)</button>
+      <button class="home-again-btn" onclick="goHome()">🏠 BACK TO MAP</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// LESSON DATA
+// =====================================================
+const LESSONS = [
+
+// ─────────── LESSON 1: GREETINGS ───────────
+{id:0,title:"နှုတ်ဆက်ခြင်း",titleEn:"Greetings & Introductions",icon:"👋",
+slides:[
+{title:"Slide 1: Formal Greetings — ယဉ်ကျေးသော နှုတ်ဆက်ပုံ",
+sections:[
+{title:"Formal (ရုံးသုံး / လူကြီးများ)",content:"• Hello. → ယဉ်ကျေးသော အခြေခံ နှုတ်ဆက်ပုံ\n• Good Morning → မနက် (၅AM – ၁၂PM)\n• Good Afternoon → နေ့ (၁၂PM – ၆PM)\n• Good Evening → ညနေ (၆PM –)\n• How are you? → နေကောင်းပါသလား?\n• Nice to meet you. → တွေ့ရတာ ဝမ်းသာပါတယ်"},
+{title:"⚠️ Good Night ≠ Good Evening!",content:"Good Evening = ညနေ တွေ့ကာ နှုတ်ဆက်တာ\nGood Night = ကွဲကွာကာ 'ကောင်းကောင်း အိပ်ပါ' ဆိုသည်\n\n✅ ညနေ ၇ နာရီ → Good Evening!\n✅ အိပ်ရာဝင်ကာ → Good Night!\n❌ ညနေ ၇ နာရီ → Good Night (မှားပါတယ်!)"}
+],tip:"Good Evening နဲ့ Good Night ကို မမှားပါနဲ့! ဒါ အများဆုံး မှားတတ်တဲ့ Greeting Mistake ပါ!"},
+
+{title:"Slide 2: Informal + Self-Introduction",
+sections:[
+{title:"Informal (သူငယ်ချင်းများ / ရင်းနှီးသူများ)",content:"• Hi! / Hey! → ပေါ့ပေါ့ပါးပါး\n• What's up? → ဘာဖြစ်နေလဲ?\n• How's it going? → အဆင်ပြေလား?\n• Long time no see! → ကြာကြာ မတွေ့ဘူး!\n• What are you up to? → ဘာလုပ်နေလဲ?"},
+{title:"Self Introduction Pattern 👤",content:"I'm [name]. I'm from [place]. I'm a [job].\n\n✅ I'm Leo. I'm from Myanmar. Nice to meet you!\n\nHow are you? ကို Natural ကျကျ ပြန်ဖြေပုံ:\n✅ I'm good, thanks! How about you?\n❌ I am fine, thank you. And you? (Robotic!)"}
+],tip:"မိတ်ဆက်တဲ့အခါ 'Nice to meet you!' ကို အမြဲတပ်ပါ! First Impression ကောင်းသွားပါတယ်!"}
+],
+questionPool:[
+{type:"mcq",q:"မနက် ၁၀ နာရီမှာ ဆရာကို?",emoji:"🌅",choices:["Good Evening!","Good Morning!","Good Night!","What's up?"],answer:1,explain:"မနက် ၅AM–၁₂PM = Good Morning! ✅"},
+{type:"mcq",q:"ညနေ ၇ နာရီမှာ ဘာပြောမလဲ?",emoji:"🌆",choices:["Good Morning","Good Afternoon","Good Evening","Good Night"],answer:2,explain:"၆PM ကနေ ညနေ → Good Evening ✅ (Good Night မဟုတ်ပါ!)"},
+{type:"mcq",q:"သူငယ်ချင်းကို Casual greeting?",emoji:"😎",choices:["Good Afternoon, Sir.","How do you do?","Hey! What's up?","Good Morning, Ma'am."],answer:2,explain:"'Hey! What's up?' = Casual & Natural ✅"},
+{type:"mcq",q:"'How are you?' Natural reply?",emoji:"🤔",choices:["Yes, I am.","I am fine, thank you.","I'm good, thanks! How about you?","Good."],answer:2,explain:"'I'm good, thanks! How about you?' = Natural & Brilliant ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ငါ Leo ပဲ၊ တွေ့ရတာ ဝမ်းသာတယ်'",sub:"",words:["meet","I'm","Nice","to","Leo.","you!"],answer:["I'm","Leo.","Nice","to","meet","you!"],explain:"I'm Leo. Nice to meet you! ✅"},
+{type:"mcq",q:"Good Night ကဘယ်အချိန် ပြောတာ?",emoji:"🌙",choices:["မနက်မိုးလင်းရင်","ညနေ ၆ နာရီ","အိပ်ရာဝင်ကာ","နေ့လည်ချိန်"],answer:2,explain:"Good Night = အိပ်ရာဝင်ကာ ✅"},
+{type:"fill",q:"'Nice to ___ you!' ဖြည့်ပါ",emoji:"🤝",answer:"meet",hint:"m-e-e-t",explain:"Nice to MEET you! = တွေ့ရတာ ဝမ်းသာတယ် ✅"},
+{type:"mcq",q:"Self-intro မှန်တာ?",emoji:"👤",choices:["I Leo am.","My name Leo is.","I'm Leo. Nice to meet you!","Leo. I."],answer:2,explain:"I'm [name]. Nice to meet you! ← Standard pattern ✅"}
+]},
+
+// ─────────── LESSON 2: NUMBERS ───────────
+{id:1,title:"ဂဏန်းများ ၁–၁၀၀",titleEn:"Numbers 1–100",icon:"🔢",
+slides:[
+{title:"Slide 1: Numbers 1–20 — ပုံစံများ",
+sections:[
+{title:"1–12 (မှတ်ရမည်!)",content:"1=one · 2=two · 3=three · 4=four · 5=five\n6=six · 7=seven · 8=eight · 9=nine · 10=ten\n11=eleven · 12=twelve\n\n⚠️ eleven နဲ့ twelve ကို ပုံစံမဟုတ်ဘဲ တိုက်ရိုက် မှတ်ရပါမယ်!"},
+{title:"13–19 (Teens Pattern)",content:"13=thirteen (three+teen)\n14=fourteen (four+teen)\n15=fifteen ⚠️ (five→fif+teen)\n16=sixteen · 17=seventeen\n18=eighteen · 19=nineteen\n\nTeen Pattern: Number + teen\nအသံကို နောက်ကနေ ဆွဲပါ → thir-TEEN"}
+],tip:"13–19 အားလုံးမှာ 'teen' ပါတယ်! ဒါကြောင့် Teenager ဆိုတာ ၁၃–၁၉ နှစ် လူငယ်တွေကို ဆိုလိုတာပဲ!"},
+
+{title:"Slide 2: Tens & Spelling Traps",
+sections:[
+{title:"20–100 (Tens Pattern)",content:"20=twenty · 30=thirty · 40=FORTY ⚠️\n50=FIFTY ⚠️ · 60=sixty · 70=seventy\n80=eighty · 90=ninety · 100=one hundred\n\n21=twenty-one · 35=thirty-five\n68=sixty-eight · 99=ninety-nine"},
+{title:"⚠️ Spelling Traps — မှားတတ်သော စာလုံးများ",content:"❌ Fourty → ✅ FORTY (U ပျောက်သည်!)\n❌ Fiveteen → ✅ FIFTEEN\n❌ Tvelve → ✅ TWELVE\n❌ Ninty → ✅ NINETY\n\nLogic: four→forty (u drops)\nfive→fifteen (ve→f)"}
+],tip:"စျေးဝယ်တဲ့အခါ ပိုက်ဆံပေးတဲ့အခါ စိတ်ထဲမှာ အင်္ဂလိပ်နံပါတ် ရေတွက်ပါ! ဒါဟာ Number ကျွမ်းကျင်ဖို့ အမြန်ဆုံးနည်းပါ!"}
+],
+questionPool:[
+{type:"mcq",q:"40 ကို ဘယ်လိုရေးမလဲ?",emoji:"4️⃣0️⃣",choices:["Fourty","Forty","Fourtty","Fortty"],answer:1,explain:"40 = Forty! 'u' ပျောက်သွားပါတယ်! ✅"},
+{type:"mcq",q:"50 ကို ဘယ်လိုရေးမလဲ?",emoji:"5️⃣0️⃣",choices:["Fivety","Fifthy","Fifty","Fivty"],answer:2,explain:"50 = Fifty! five → fif (v→f) ✅"},
+{type:"mcq",q:"thirteen vs thirty — ကွာခြားချက်?",emoji:"🤓",choices:["ဘာမှမကွာ","thirteen=13, thirty=30","thirteen=30, thirty=13","မှန်တာမရှိ"],answer:1,explain:"thirteen=13 (teen), thirty=30 (ty) ✅"},
+{type:"mcq",q:"10 + 20 = ?",emoji:"🧮",choices:["Thirty","Twenty","Twelve","Forty"],answer:0,explain:"10+20=30=thirty ✅"},
+{type:"fill",q:"'15' ကို စာလုံးပေါင်း ရေးပါ",emoji:"1️⃣5️⃣",answer:"fifteen",hint:"f-i-f-t-e-e-n",explain:"15 = fifteen! (fif+teen) ✅"},
+{type:"mcq",q:"12 ကို?",emoji:"1️⃣2️⃣",choices:["twelvety","twelve","twoth","twelf"],answer:1,explain:"12 = twelve — မှတ်ထားပါ! ✅"},
+{type:"mcq",q:"50 – 5 = ?",emoji:"🔢",choices:["forty","forty-five","fifty-five","thirty-five"],answer:1,explain:"50−5=45=forty-five ✅"},
+{type:"mcq",q:"90 ကို?",emoji:"9️⃣0️⃣",choices:["ninty","ninethy","ninety","ninty-nine"],answer:2,explain:"90 = ninety! (nine+ty, e မပျောက်!) ✅"}
+]},
+
+// ─────────── LESSON 3: COLORS & SHAPES ───────────
+{id:2,title:"အရောင်နှင့် ပုံသဏ္ဍာန်",titleEn:"Colors & Shapes",icon:"🎨",
+slides:[
+{title:"Slide 1: Colors — အရောင်များ + Adjective Rule",
+sections:[
+{title:"The Adjective Rule 📌",content:"မြန်မာလို: ကား (Noun) + အနီ (Color)\nအင်္ဂလိပ်လို: RED (Color) + CAR (Noun)\n\nColor ဟာ Noun ရဲ့ ရှေ့မှာ အမြဲနေရပါမယ်!\n✅ A red car · A blue pen\n❌ A car red (မှားပါတယ်!)"},
+{title:"Colors Vocabulary 🌈",content:"🔴 Red — အနီ       🔵 Blue — အပြာ\n🟡 Yellow — အဝါ    🟢 Green — အစိမ်း\n⚫ Black — အနက်    ⚪ White — အဖြူ\n🟠 Orange — လိမ္မော်  🟣 Purple — ခရမ်း\n🟤 Brown — အညို   🩷 Pink — ပန်းရောင်"}
+],tip:"ပတ်ဝန်းကျင်က ပစ္စည်းတွေကို 'Color + Noun' ပုံစံနဲ့ ဆင်ကြည့်ပါ! Blue sky, Green tree, White shirt — ဒါ Think in English ပါ!"},
+
+{title:"Slide 2: Shapes & Color+Shape Combinations",
+sections:[
+{title:"Shapes — ပုံသဏ္ဍာန်",content:"⭕ Circle — အဝိုင်း\n🔲 Square — လေးထောင့်မှန်\n🔺 Triangle — တြိဂံ\n⬜ Rectangle — ကြိမ်ထောင့်\n❤️ Heart — အသည်းပုံ\n⭐ Star — ကြယ်ပုံ\n💎 Diamond — စိန်ပုံ"},
+{title:"Color + Shape Combinations 🎨",content:"A yellow circle → အဝါ အဝိုင်း\nA red triangle → အနီ တြိဂံ\nA blue square → အပြာ လေးထောင့်\n\nPattern: A/An + [Color] + [Shape]\n\nI have a black car. ← ဒီ Pattern ကို မှတ်!\nShe has a red bag. ← Color ရဲ့ ရှေ့မှာ a/an!"}
+],tip:"Color နဲ့ Shape တွေကို ပေါင်းသုံးနိုင်ရင် ကိုယ်ဆိုလိုတာကို Vividly Describe လုပ်နိုင်ပါတယ်! ဒါ English Fluency ရဲ့ အစ!"}
+],
+questionPool:[
+{type:"mcq",q:"'အပြာရောင် ကား' ကို?",emoji:"🚙",choices:["Car blue","A blue car","Blue a car","Car is blue"],answer:1,explain:"Color → Noun ရဲ့ ရှေ့ → A blue car ✅"},
+{type:"mcq",q:"⭕ ဒီပုံသဏ္ဍာန်?",emoji:"⭕",choices:["Square","Triangle","Circle","Rectangle"],answer:2,explain:"⭕ = Circle = အဝိုင်း ✅"},
+{type:"mcq",q:"'A yellow triangle' ဆိုတာ?",emoji:"🤔",choices:["အပြာ တြိဂံ","အဝါ လေးထောင့်","အဝါ တြိဂံ","အဝါ အဝိုင်း"],answer:2,explain:"yellow=အဝါ, triangle=တြိဂံ → A yellow triangle ✅"},
+{type:"mcq",q:"🔴 Color?",emoji:"🔴",choices:["Blue","Green","Red","Yellow"],answer:2,explain:"🔴=Red=အနီ ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ငါ့မှာ အနက် ကားတစ်စီး ရှိတယ်'",sub:"",words:["a","I","black","have","car."],answer:["I","have","a","black","car."],explain:"I have a black car. ← Color က Noun ရဲ့ ရှေ့! ✅"},
+{type:"mcq",q:"'Green' မြန်မာလို?",emoji:"🌿",choices:["အနီ","အပြာ","အဝါ","အစိမ်း"],answer:3,explain:"Green = အစိမ်း ✅"},
+{type:"mcq",q:"🟣 ဒါ ဘာ color?",emoji:"🟣",choices:["Pink","Orange","Purple","Brown"],answer:2,explain:"🟣 = Purple = ခရမ်းရောင် ✅"},
+{type:"mcq",q:"Adjective (Color) ဟာ ဘာရဲ့ ဘယ်ဘက်မှာ နေရတာ?",emoji:"📌",choices:["Verb ရဲ့ ရှေ့","Noun ရဲ့ ရှေ့","Noun ရဲ့ နောက်","Sentence ရဲ့ နောက်"],answer:1,explain:"Adjective (Color) ဟာ Noun ရဲ့ ရှေ့မှာ အမြဲနေရပါမယ်! ✅"}
+]},
+
+// ─────────── LESSON 4: DAYS, MONTHS & IN/ON/AT ───────────
+{id:3,title:"In / On / At — အချိန်",titleEn:"Days, Months & Time Prepositions",icon:"📅",
+slides:[
+{title:"Slide 1: Days & Months",
+sections:[
+{title:"Days of the Week — တစ်ပတ်ရဲ့ နေ့များ",content:"Monday → တနင်္လာ\nTuesday → အင်္ဂါ\nWednesday → ဗုဒ္ဓဟူး ⚠️ = 'WENZ-day'\nThursday → ကြာသပတေး\nFriday → သောကြာ\nSaturday → စနေ\nSunday → တနင်္ဂနွေ\n\nWeekend = Saturday + Sunday"},
+{title:"Months of the Year — တစ်နှစ်ရဲ့ လများ",content:"Jan · Feb · Mar · Apr · May · Jun\nJul · Aug · Sep · Oct · Nov · Dec\n\nJanuary · February · March · April\nMay · June · July · August\nSeptember · October · November · December"}
+],tip:"Wednesday ကို 'ဝမ်းစ်ဒေး' လို့ ဖတ်ပါ! 'ဝက်နက်စီးဒေး' မဟုတ်ပါ! W-E-D ကို silent ဖတ်ပြီး WEN-Z-day ဆိုပြီးဖတ်ပါ!"},
+
+{title:"Slide 2: The Time Pyramid — In / On / At",
+sections:[
+{title:"⏰ The Time Pyramid",content:"IN (အကျယ်ဆုံး) → လ, နှစ်, ရာသီ\n   in June · in 2025 · in summer\n\nON (အလယ်) → နေ့ · ရက်စွဲ\n   on Monday · on March 5th · on my birthday\n\nAT (အသေးဆုံး) → အတိအကျ နာရီ\n   at 5:00 PM · at noon · at midnight"},
+{title:"ဥပမာများ — My Birthday!",content:"My birthday is IN December\n                      ON December 25th\n                      AT 8:30 PM\n\nဒီဝါကျတစ်ကြောင်းနဲ့ IN/ON/AT သုံးခုလုံး မှတ်မိပါမယ်!\n\n✅ I go to school ON Monday.\n✅ The class is AT 9 AM.\n✅ It happened IN 2024."}
+],tip:"Pyramid မှတ်ပါ: IN=ကျယ် (Year/Month), ON=အလတ် (Day), AT=ကျဉ်း (Exact Time)! ကျယ်မှ ကျဉ်းသို့ ဆင်းပါ!"}
+],
+questionPool:[
+{type:"mcq",q:"'Monday morning မှာ' ကို?",emoji:"📆",choices:["In Monday","On Monday","At Monday","By Monday"],answer:1,explain:"နေ့ → ON Monday ✅"},
+{type:"mcq",q:"'ညနေ ၉ နာရီမှာ' ကို?",emoji:"🕘",choices:["In 9 o'clock","On 9 o'clock","At 9 o'clock","For 9 o'clock"],answer:2,explain:"အတိအကျ နာရီ → AT 9 o'clock ✅"},
+{type:"mcq",q:"'June လမှာ' ကို?",emoji:"☀️",choices:["In June","On June","At June","For June"],answer:0,explain:"လ → IN June ✅"},
+{type:"mcq",q:"Wednesday ကို မှန်မှန်ကန်ကန် ဖတ်ရင်?",emoji:"🗣️",choices:["wed-nes-day","wenz-day","wed-day","wedz-dee"],answer:1,explain:"Wednesday = 'WENZ-day' ✅ WED ကို silent!"},
+{type:"mcq",q:"'In 2025' မှာ ဘာဆိုလိုတာ?",emoji:"🗓️",choices:["ရက်တစ်ရက်","နာရီတစ်ခု","နှစ် ၂၀၂၅","လတစ်လ"],answer:2,explain:"IN + နှစ် → In 2025 = ၂၀၂၅ မှာ ✅"},
+{type:"mcq",q:"'___ Friday' ဖြည့်ပါ",emoji:"🗓️",choices:["In","At","On","By"],answer:2,explain:"နေ့ (Day) → ON Friday ✅"},
+{type:"mcq",q:"Weekend = ?",emoji:"📅",choices:["Monday & Tuesday","Saturday & Sunday","Friday & Monday","Thursday & Friday"],answer:1,explain:"Weekend = Saturday & Sunday ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'Class ဟာ တနင်္လာနေ့ ၉ နာရီမှာ ရှိတယ်'",sub:"",words:["on","is","The","class","Monday","at","9 AM."],answer:["The","class","is","on","Monday","at","9 AM."],explain:"The class is on Monday at 9 AM. ✅ ON+day, AT+time!"}
+]},
+
+// ─────────── LESSON 5: A vs AN ───────────
+{id:4,title:"A နှင့် An — လျှို့ဝှက်ချက်",titleEn:"The A/An Secret",icon:"🔤",
+slides:[
+{title:"Slide 1: The Sound Principle",
+sections:[
+{title:"🔊 Rule: Sound မြင်ပြီး ဆုံးဖြတ်!",content:"Vowels (သရ): A · E · I · O · U\n\nဒီ Vowel SOUND နဲ့ စတဲ့ Word → AN\nCONSONANT Sound နဲ့ စတဲ့ Word → A\n\n✅ AN apple (a-sound)\n✅ AN egg (e-sound)\n✅ AN umbrella (u-sound)\n✅ A book (b-sound)\n✅ A car (c-sound)\n✅ A phone (p-sound)"},
+{title:"မည်မည်ရရ — Summary",content:"A + consonant sound\n  → A book, A dog, A tree, A student\n  → A nice day, A big house\n\nAN + vowel sound\n  → An apple, An egg, An ice cream\n  → An orange, An old man"}
+],tip:"စာလုံး မကြည့်ဘဲ 'အသံ' နဲ့ ဆုံးဖြတ်ပါ! ဒါ Mr. Leo ရဲ့ Golden Rule ပါ! 'အ/အာ/အီ/အေ/အို' ဆိုရင် AN ကိုကောက်ပါ!"},
+
+{title:"Slide 2: Golden Exceptions — ခြွင်းချက်များ",
+sections:[
+{title:"⚠️ Tricky Words — စာလုံးမကြည့်ဘဲ အသံကြည့်!",content:"'HOUR' → H နဲ့ စပေမယ့် 'အာ' = Vowel sound\n   → AN hour ✅ (NOT a hour)\n\n'UNIVERSITY' → U နဲ့ စပေမယ့် 'ယူ' = Consonant Y-sound\n   → A university ✅ (NOT an university)\n\n'HONEST' → H silent + 'အော်' = Vowel sound\n   → AN honest man ✅\n\n'EUROPEAN' → E+U='ယူ' = Consonant Y-sound\n   → A European city ✅"},
+{title:"Quick Practice 🏋️",content:"A/An?:\n• ___ apple → AN (a-sound)\n• ___ bag → A (b-sound)\n• ___ hour → AN (silent H, aw-sound)\n• ___ university → A (yoo-sound)\n• ___ umbrella → AN (u-sound)\n• ___ honest person → AN (silent H)"}
+],tip:"'Hour' = AN hour ← H ကို မဖတ်ဘဲ 'အာ' ဆိုပြီး ဖတ်တယ်! ဒါ English ရဲ့ Most Common Exception ပါ! မှတ်ထားပါ!"}
+],
+questionPool:[
+{type:"mcq",q:"'Apple' ရှေ့မှာ?",emoji:"🍎",choices:["A apple","An apple","The apple","No article"],answer:1,explain:"Apple='a' vowel sound → AN apple ✅"},
+{type:"mcq",q:"'Bag' ရှေ့မှာ?",emoji:"👜",choices:["An bag","A bag","The bag","One bag"],answer:1,explain:"Bag='b' consonant → A bag ✅"},
+{type:"mcq",q:"'Hour' ရှေ့မှာ?",emoji:"⏰",choices:["A hour","An hour","The hour","Hour"],answer:1,explain:"Hour='อ' vowel sound (H silent) → AN hour ✅"},
+{type:"mcq",q:"'University' ရှေ့မှာ?",emoji:"🎓",choices:["An university","A university","University","The university"],answer:1,explain:"University='yoo' consonant Y-sound → A university ✅"},
+{type:"mcq",q:"'Orange' ရှေ့မှာ?",emoji:"🍊",choices:["A orange","An orange","The orange","No article"],answer:1,explain:"Orange='o' vowel sound → AN orange ✅"},
+{type:"mcq",q:"'Egg' ရှေ့မှာ?",emoji:"🥚",choices:["A egg","An egg","The egg","One egg"],answer:1,explain:"Egg='e' vowel sound → AN egg ✅"},
+{type:"fill",q:"'___ umbrella' ဖြည့်ပါ (a or an)",emoji:"☂️",answer:"an",hint:"vowel sound — an / a",explain:"Umbrella='u' vowel sound → AN umbrella ✅"},
+{type:"mcq",q:"'Honest person' ရှေ့မှာ?",emoji:"👤",choices:["A honest person","An honest person","Honest person","The honest person"],answer:1,explain:"Honest='อ' vowel sound (H silent) → AN honest person ✅"}
+]},
+
+// ─────────── LESSON 6: AM/IS/ARE ───────────
+{id:5,title:"Am / Is / Are — To Be",titleEn:"Simple Sentences with To Be",icon:"🔗",
+slides:[
+{title:"Slide 1: Am / Is / Are — တံတားများ",
+sections:[
+{title:"The 3 Bridge Verbs 🌉",content:"I → AM\nHe / She / It → IS\nYou / We / They → ARE\n\nဥပမာ:\nI am a student. (ငါ ကျောင်းသားဖြစ်တယ်)\nShe is beautiful. (သူမ လှပါတယ်)\nWe are ready. (ငါတို့ အသင့်ဖြစ်တယ်)\nThey are teachers. (သူတို့ ဆရာများ)"},
+{title:"⚠️ မပြောရ! I Doctor!",content:"မြန်မာလို: 'ငါ ဆရာဝန်' = Subject + Noun\nအင်္ဂလိပ်လို: ဒီပုံစံ မဖြစ်ပါ!\n\nBridge မပါရင် ဝါကျ ပြိုကျပါတယ်!\n\n❌ I doctor.\n✅ I AM a doctor.\n\n❌ She teacher.\n✅ She IS a teacher."}
+],tip:"ကြိယာ Bridge မပါဘဲ Noun ချည်း မပြောပါနဲ့! 'I am, He is, They are' = English ရဲ့ Foundation!"},
+
+{title:"Slide 2: Negative + Yes/No Questions",
+sections:[
+{title:"Negative — ငြင်းဆိုပုံ 🚫",content:"NOT လေး ထည့်ရုံပဲ!\n\nI am NOT a student.\nShe is NOT here. / She isn't here.\nThey are NOT happy. / They aren't happy.\n\nShortforms:\nI'm not · He's not = He isn't\nYou're not = You aren't"},
+{title:"Yes/No Questions — မေးပုံ ❓",content:"Am/Is/Are ကို ရှေ့ကို ရွှေ့!\n\nStatement: She is busy.\nQuestion: Is she busy?\n\nStatement: They are here.\nQuestion: Are they here?\n\nYes, she is. / No, she isn't.\nYes, they are. / No, they aren't."}
+],tip:"မေးခွန်းမေးတဲ့အခါ Am/Is/Are ကို Subject ရဲ့ ရှေ့ကို ရွှေ့ပါ! Is she? Are they? Am I? ← ဒါ Pattern!"}
+],
+questionPool:[
+{type:"mcq",q:"'ငါ ကျောင်းသားဖြစ်တယ်' ကို?",emoji:"🎒",choices:["I is a student.","I am a student.","I are a student.","Me am student."],answer:1,explain:"I + AM → I am a student ✅"},
+{type:"mcq",q:"'She ___ beautiful.' ဖြည့်ပါ",emoji:"🌟",choices:["am","are","is","be"],answer:2,explain:"He/She/It → IS → She IS beautiful ✅"},
+{type:"mcq",q:"'We ___ ready.' ဖြည့်ပါ",emoji:"💪",choices:["am","is","are","be"],answer:2,explain:"We/You/They → ARE → We ARE ready ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'သူ ဒီမှာ မရှိဘူး'",sub:"",words:["not","is","He","here."],answer:["He","is","not","here."],explain:"He is not here ✅ IS NOT = မရှိဘူး"},
+{type:"mcq",q:"'___ you hungry?' ဖြည့်ပါ",emoji:"🍽️",choices:["Am","Is","Are","Be"],answer:2,explain:"You → ARE → Are you hungry? ✅"},
+{type:"mcq",q:"'They ___ teachers.' ဖြည့်ပါ",emoji:"👩‍🏫",choices:["am","is","are","be"],answer:2,explain:"They → ARE → They ARE teachers ✅"},
+{type:"mcq",q:"'I am not a teacher.' ← Negative of?",emoji:"🤔",choices:["I teacher.","I am a teacher.","I is a teacher.","I are a teacher."],answer:1,explain:"I am a teacher → I am NOT a teacher (not ထည့်ရုံ!) ✅"},
+{type:"mcq",q:"Question pattern မှန်တာ?",emoji:"❓",choices:["She is busy? →  Busy she is?","She is busy → Is she busy?","She is busy → She is busy?","She busy → Is she?"],answer:1,explain:"Is/Am/Are ကို ရှေ့ကို ရွှေ့! → Is she busy? ✅"}
+]},
+
+// ─────────── LESSON 7: WH QUESTIONS ───────────
+{id:6,title:"WH မေးခွန်းများ",titleEn:"Basic WH Questions",icon:"❓",
+slides:[
+{title:"Slide 1: What / Who / Where / When",
+sections:[
+{title:"The WH Family 👨‍👩‍👧‍👦 — Part 1",content:"What (ဘာ) → ပစ္စည်း/အကြောင်းအရာ\n   What is this? / What do you do?\n\nWho (ဘယ်သူ) → လူ\n   Who is he? / Who are they?\n\nWhere (ဘယ်မှာ) → နေရာ\n   Where are you? / Where is she?\n\nWhen (ဘယ်တော့) → အချိန်\n   When is the class? / When are you free?"},
+{title:"WH Pattern — ဝါကျဖွဲ့ပုံ 📐",content:"WH word + is/are + Subject + ?\n\n✅ What is this?\n✅ Who is she?\n✅ Where are you?\n✅ When is the exam?\n\n❌ Where you are? (မှားပါတယ်!)\n❌ What this is? (မှားပါတယ်!)"}
+],tip:"WH + Verb + Subject! Verb ကို Subject ရဲ့ ရှေ့မှာ ထားပါ! Where ARE you? NOT 'Where you are?' — ဒါ #1 Grammar Mistake!"},
+
+{title:"Slide 2: Why / How + Full Practice",
+sections:[
+{title:"The WH Family 👨‍👩‍👧‍👦 — Part 2",content:"Why (ဘာကြောင့်) → အကြောင်းရင်း\n   Why are you sad? / Why is she late?\n\nHow (ဘယ်လို) → နည်းလမ်း / ဖြစ်ပုံ\n   How are you? / How is the weather?\n\nHow much (ဘယ်လောက်) → ဈေး\n   How much is this?\n\nHow many (ဘယ်နှစ်ခု) → ရေတွက်ရသော\n   How many students are there?"},
+{title:"Quick Reference Table 📋",content:"What → ဘာ     Who → ဘယ်သူ\nWhere → ဘယ်မှာ  When → ဘယ်တော့\nWhy → ဘာကြောင့်  How → ဘယ်လို\n\nAll patterns: WH + is/are + Subject?\nWhere are you?\nWhy is she late?\nHow much is it?"}
+],tip:"WH questions မေးတဲ့အခါ 'are/is' ကို ARE, IS ဆိုပြီး Emphasize ဖတ်ပါ! 'Where ARE you?' ← ဒါ Natural English!"}
+],
+questionPool:[
+{type:"mcq",q:"'မင်း ဘယ်မှာ နေသလဲ?' ကို?",emoji:"📍",choices:["What are you?","Who are you?","Where are you?","When are you?"],answer:2,explain:"Where = ဘယ်မှာ → Where are you? ✅"},
+{type:"mcq",q:"'ဒါ ဘာလဲ?' ကို?",emoji:"❓",choices:["Who is this?","What is this?","Where is this?","How is this?"],answer:1,explain:"What = ဘာ → What is this? ✅"},
+{type:"mcq",q:"Question pattern မှန်တာ?",emoji:"🧐",choices:["Where you are?","Where are you?","You where are?","Are where you?"],answer:1,explain:"WH + Verb + Subject → Where ARE you? ✅"},
+{type:"mcq",q:"'ဘာကြောင့်' ကို အင်္ဂလိပ်လို?",emoji:"🤷",choices:["When","Where","Why","How"],answer:2,explain:"Why = ဘာကြောင့် ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'သူ ဘယ်သူလဲ?'",sub:"",words:["is","Who","she?"],answer:["Who","is","she?"],explain:"Who is she? ✅ WH + is + Subject!"},
+{type:"mcq",q:"'How much is this?' ဆိုရင် ဘာမေးတာ?",emoji:"💰",choices:["ဘာလဲ","ဘယ်မှာ","ဘယ်လောက် (ဈေး)","ဘယ်တော့"],answer:2,explain:"How much = ဘယ်လောက်ဈေး! ✅"},
+{type:"mcq",q:"'ဘယ်တော့' ကို?",emoji:"🕐",choices:["What","Who","Where","When"],answer:3,explain:"When = ဘယ်တော့ ✅"},
+{type:"mcq",q:"'Why is she late?' ဆိုရင် ဘာမေးတာ?",emoji:"⏰",choices:["သူမ ဘယ်မှာ?","သူမ ဘာကြောင့် နောက်ကျတာ?","သူမ ဘယ်သူ?","သူမ ဘယ်တော့?"],answer:1,explain:"Why = ဘာကြောင့် → Why is she late? ✅"}
+]},
+
+// ─────────── LESSON 8: SIMPLE PRESENT ───────────
+{id:7,title:"Simple Present Tense",titleEn:"I/You/We/They + Verb",icon:"⚡",
+slides:[
+{title:"Slide 1: Simple Present — ပုံမှန်လုပ်ဆောင်မှုများ",
+sections:[
+{title:"ဘာ Tense လဲ?",content:"Simple Present = ပုံမှန် / အမြဲ လုပ်ဆောင်တာ\n\n• I eat rice every day. (ငါ နေ့တိုင်း ထမင်းစားတယ်)\n• We go to school. (ငါတို့ ကျောင်းသွားတယ်)\n• They speak Burmese. (သူတို့ မြန်မာစကား ပြောတယ်)\n• You study English. (မင်း အင်္ဂလိပ် ဖတ်တယ်)"},
+{title:"Pattern: Subject + Verb (base form)",content:"I / You / We / They + [Verb base]\n→ ကြိယာ ဒီအတိုင်းပဲ ထည့်ပါ! s/es မထည့်ပါနဲ့!\n\n✅ I eat, I work, I study, I like\n✅ We play, We learn, We live\n✅ They read, They run, They watch\n\nAdverbs: every day, always, usually, often, sometimes, never"}
+],tip:"Simple Present ဟာ 'ပုံမှန် လုပ်ဆောင်တာ' ကို ဖော်ပြပါတယ်! Every day, always, usually တို့နဲ့ မကြာခဏ တွဲပါတယ်!"},
+
+{title:"Slide 2: Negative (don't) + Do you?",
+sections:[
+{title:"Negative Form — 'don't' သုံးပါ",content:"I / You / We / They + DON'T + Verb\n\n✅ I don't like coffee. (ငါ ကော်ဖီ မကြိုက်ဘူး)\n✅ We don't eat meat. (ငါတို့ အသားမစားဘူး)\n✅ They don't speak English. (သူတို့ English မပြောဘူး)\n\n❌ I not like coffee. (မှားပါ!)\n❌ I don't likes coffee. (မှားပါ!)"},
+{title:"Question: Do you...?",content:"Do + I/You/We/They + Verb?\n\nDo you like this? → Yes, I do. / No, I don't.\nDo they study here? → Yes, they do. / No, they don't.\n\n✅ Do you speak English?\n✅ Do we need this?\n✅ Do you understand?"}
+],tip:"Negative = DON'T + verb (base form), Question = DO + subject + verb? 'don't likes' မပြောပါနဲ့! don't + base form ✅!"}
+],
+questionPool:[
+{type:"mcq",q:"'I ___ English every day.' ဖြည့်ပါ",emoji:"📚",choices:["studies","studying","study","studyed"],answer:2,explain:"I/You/We/They + base form → I study ✅"},
+{type:"mcq",q:"'ငါ ကော်ဖီ မကြိုက်ဘူး' ကို?",emoji:"☕",choices:["I not like coffee.","I don't like coffee.","I doesn't like coffee.","I don't likes coffee."],answer:1,explain:"I/You/We/They + don't + verb → I don't like coffee ✅"},
+{type:"mcq",q:"'Do you like music?' → ကောင်းကောင်း ပြန်ဖြေပုံ?",emoji:"🎵",choices:["Yes, I like.","Yes, I do.","Yes, do I.","Yes, I am."],answer:1,explain:"Do you? → Yes, I DO. / No, I DON'T. ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ငါ နေ့တိုင်း ထမင်းစားတယ်'",sub:"",words:["every","I","day.","eat","rice"],answer:["I","eat","rice","every","day."],explain:"I eat rice every day. ← Simple Present ✅"},
+{type:"mcq",q:"'They ___ speak Burmese.' ဖြည့်ပါ (negative)",emoji:"🚫",choices:["doesn't","don't","not","isn't"],answer:1,explain:"They + don't + verb → They don't speak ✅"},
+{type:"mcq",q:"'We always ___ breakfast.' မှန်တာ?",emoji:"🍳",choices:["eats","eating","ate","eat"],answer:3,explain:"We + base form → We eat ✅ (We always eat breakfast)"},
+{type:"mcq",q:"Simple Present ကို ဘာနဲ့ သိနိုင်တာ?",emoji:"📅",choices:["I was","I will","every day / always","I am eating"],answer:2,explain:"'every day, always, usually' ← Simple Present ရဲ့ signal words! ✅"},
+{type:"mcq",q:"'___ you understand?' ဖြည့်ပါ",emoji:"🤔",choices:["Am","Is","Are","Do"],answer:3,explain:"Question with verb → DO you understand? ✅"}
+]},
+
+// ─────────── LESSON 9: HE/SHE/IT + S ───────────
+{id:8,title:"He/She/It + s/es",titleEn:"3rd Person Singular",icon:"👤",
+slides:[
+{title:"Slide 1: 3rd Person Singular — s/es Rule",
+sections:[
+{title:"He/She/It မှာ s/es ထည့်ရသည်!",content:"I eat → He EATS\nI work → She WORKS\nI study → He STUDIES\nI go → She GOES\nI watch → He WATCHES\n\nRule:\n• Most verbs → +s (work→works)\n• -s/-sh/-ch/-x/-o → +es (watch→watches)\n• Consonant+y → -ies (study→studies)"},
+{title:"Patterns မှတ်ပုံ",content:"Regular +s:\nwork→works · eat→eats · live→lives\nsee→sees · learn→learns · run→runs\n\n+es verbs:\ngo→goes · do→does · watch→watches\nteach→teaches · wash→washes · fix→fixes\n\n-ies verbs:\nstudy→studies · try→tries · fly→flies\ncarry→carries · worry→worries"}
+],tip:"He/She/It မှာ verb ရဲ့ နောက်မှာ 's' ထည့်ပါ! 'She eat' မပြောပါနဲ့ — 'She eats' ✅ ဒါ Common Mistake No.1 for Burmese learners!"},
+
+{title:"Slide 2: Doesn't + Does she?",
+sections:[
+{title:"Negative: Doesn't + base verb",content:"He/She/It + DOESN'T + Verb (base!)\n\n✅ He doesn't like coffee.\n✅ She doesn't work here.\n✅ It doesn't matter.\n\n❌ He doesn't likes coffee. (likes မဟုတ်!)\n❌ She not works. (မဟုတ်ပါ!)\n\nImportant: doesn't + BASE form (no -s/-es!)"},
+{title:"Question: Does he/she?",content:"Does + He/She/It + Verb (base)?\n\nDoes she speak English? → Yes, she does. / No, she doesn't.\nDoes he work here? → Yes, he does. / No, he doesn't.\n\n✅ Does he like music?\n✅ Does she study every day?\n\n❌ Does he likes? (base form မသုံး -s မထည့်ပါ!)"}
+],tip:"doesn't နဲ့ does ပါရင် verb ကို base form ပဲ သုံးပါ! 'She doesn't WORK' ✅ 'She doesn't WORKS' ❌ — ဒါ Key Rule!"}
+],
+questionPool:[
+{type:"mcq",q:"'She ___ English.' ဖြည့်ပါ",emoji:"🗣️",choices:["speak","speaks","speaking","speaked"],answer:1,explain:"She/He/It → +s → She SPEAKS ✅"},
+{type:"mcq",q:"'He ___ to school.' ဖြည့်ပါ",emoji:"🏫",choices:["go","gos","goes","goies"],answer:2,explain:"go → goes (irregular +es) ✅"},
+{type:"mcq",q:"'watch' → 3rd person?",emoji:"📺",choices:["watchs","watchies","watches","wach"],answer:2,explain:"watch → watches (+es for -ch) ✅"},
+{type:"mcq",q:"'study' → 3rd person?",emoji:"📖",choices:["studys","studyes","studies","studyies"],answer:2,explain:"study → studies (consonant+y → -ies) ✅"},
+{type:"mcq",q:"'Does she like coffee?' → Reply?",emoji:"☕",choices:["Yes, she like.","Yes, she do.","Yes, she does.","Yes, does she."],answer:2,explain:"Does she? → Yes, she DOES. ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'သူ အသားမစားဘူး'",sub:"",words:["eat","He","meat.","doesn't"],answer:["He","doesn't","eat","meat."],explain:"He doesn't eat meat. ✅ doesn't + BASE form!"},
+{type:"mcq",q:"'She ___ like him.' (negative) ဖြည့်ပါ",emoji:"🚫",choices:["don't","doesn't","not","isn't"],answer:1,explain:"She/He/It → DOESN'T + base verb ✅"},
+{type:"mcq",q:"'He doesn't ___.' မှန်တာ?",emoji:"🤔",choices:["works","working","worked","work"],answer:3,explain:"doesn't + BASE form → doesn't WORK ✅ (-s မထည့်ပါနဲ့!)"}
+]},
+
+// ─────────── LESSON 10: CAN / CAN'T ───────────
+{id:9,title:"Can / Can't — တတ်ခြင်း",titleEn:"Ability with Can / Can't",icon:"💪",
+slides:[
+{title:"Slide 1: Can — တတ်သည်/လုပ်နိုင်သည်",
+sections:[
+{title:"Can = တတ်တယ် / နိုင်တယ် 💡",content:"Subject + CAN + Verb (base form)\n\n✅ I can swim. (ငါ ရေကူးတတ်တယ်)\n✅ She can speak English. (သူမ English ပြောနိုင်တယ်)\n✅ He can cook. (သူ ချက်ပြုတ်တတ်တယ်)\n✅ We can help you. (ငါတို့ မင်းကို ကူနိုင်တယ်)\n\n⚠️ Can ရဲ့ နောက်မှာ Base Form ပဲ သုံးပါ!\nShe CAN speak ✅ NOT She can speaks ❌"},
+{title:"Can ရဲ့ Subject Rule",content:"I / You / He / She / It / We / They\n— အားလုံး CAN ပဲ သုံးပါ! s/es မထည့်ပါနဲ့!\n\n✅ I can run.\n✅ She can run. (NOT she cans run!)\n✅ He can cook. (NOT he cans cook!)\n\nCan = Modal Verb → Subject ပြောင်းလဲရင်တောင် မပြောင်း!"}
+],tip:"Can ရဲ့ နောက်မှာ ALWAYS Base Form! She can SPEAK, He can COOK — s/es ထည့်ခြင်း မရှိ! Modal Verb ဆိုတာ ဒါပဲ!"},
+
+{title:"Slide 2: Can't + Can you?",
+sections:[
+{title:"Can't = မတတ်ဘူး / မနိုင်ဘူး 🚫",content:"Subject + CAN'T + Verb (base form)\n\n✅ I can't drive. (ငါ မောင်းမတတ်ဘူး)\n✅ She can't swim. (သူမ ရေကူးမတတ်ဘူး)\n✅ He can't cook. (သူ ချက်မတတ်ဘူး)\n\nCannot = Can not (Full form, formal)\nCan't = Cannot (Short form, everyday)"},
+{title:"Question: Can you...?",content:"Can + Subject + Verb (base)?\n\nCan you swim? → Yes, I can. / No, I can't.\nCan she drive? → Yes, she can. / No, she can't.\n\n✅ Can you speak English?\n✅ Can he play guitar?\n✅ Can they help us?"}
+],tip:"Can't = Cannot = မတတ်ဘူး/မနိုင်ဘူး! Can you? မေးရင် Yes, I can / No, I can't နဲ့ ပြန်ဖြေပါ!"}
+],
+questionPool:[
+{type:"mcq",q:"'I ___ swim.' (ရေကူးတတ်တယ်) ဖြည့်ပါ",emoji:"🏊",choices:["am","will","can","could"],answer:2,explain:"Ability → CAN → I can swim ✅"},
+{type:"mcq",q:"'She can ___ English.' ဖြည့်ပါ",emoji:"🗣️",choices:["speaks","speaking","spoke","speak"],answer:3,explain:"can + BASE form → can SPEAK ✅"},
+{type:"mcq",q:"'Can you drive?' → ဖြေပုံ?",emoji:"🚗",choices:["Yes, I am.","Yes, I do.","Yes, I can.","Yes, can I."],answer:2,explain:"Can you? → Yes, I CAN. ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'သူမ guitar တီးတတ်တယ်'",sub:"",words:["play","She","can","guitar."],answer:["She","can","play","guitar."],explain:"She can play guitar ✅ can + base form!"},
+{type:"mcq",q:"'I can't ___.' မှန်တာ?",emoji:"🚫",choices:["drives","driving","drove","drive"],answer:3,explain:"can't + BASE form → can't DRIVE ✅"},
+{type:"mcq",q:"'He cans cook.' ဒါ ဘာဖြစ်နေသလဲ?",emoji:"❌",choices:["မှန်ပါတယ်","'cans' မဟုတ်ဘဲ 'can' ပဲ သုံးပါ","cook ကို cooks လုပ်ရမယ်","subject မှားနေတယ်"],answer:1,explain:"Can = modal verb → Subject ပြောင်းလဲရင်တောင် 'can' ပဲ! He CAN cook ✅"},
+{type:"mcq",q:"'ငါ ရေကူးမတတ်ဘူး' ကို?",emoji:"🏊",choices:["I not swim.","I can't swim.","I don't swim.","I swim not."],answer:1,explain:"မတတ်ဘူး → can't → I can't swim ✅"},
+{type:"mcq",q:"'Can she dance?' → 'No, ___ can't.'",emoji:"💃",choices:["she","her","they","it"],answer:0,explain:"Can she? → No, SHE can't ✅"}
+]},
+
+// ─────────── LESSON 11: POSSESSIVES ───────────
+{id:10,title:"ကိုယ်ပိုင်ဖော်ပြချက်",titleEn:"Possessives: My/Your/His/Her",icon:"👥",
+slides:[
+{title:"Slide 1: Possessive Adjectives",
+sections:[
+{title:"ကိုယ်ပိုင်ဖော်ပြချက် Pronouns 👤",content:"I → MY (ငါ့)\nYou → YOUR (မင်း့)\nHe → HIS (သူ့)\nShe → HER (သူမ့်)\nIt → ITS (ဒါ့)\nWe → OUR (ငါတို့ရဲ့)\nThey → THEIR (သူတို့ရဲ့)\n\nUsage: Possessive + Noun\nMy book · Your bag · His phone · Her name"},
+{title:"ဥပမာများ",content:"✅ This is MY book. (ဒါ ငါ့ စာအုပ်)\n✅ That is YOUR bag. (ဒါ မင်း့ အိတ်)\n✅ His name is Leo. (သူ့ နာမည် Leo )\n✅ Her phone is new. (သူမ့် ဖုန်း အသစ်)\n✅ Our school is big. (ငါတို့ ကျောင်း ကြီးတယ်)\n✅ Their house is white. (သူတို့ အိမ် အဖြူ)"}
+],tip:"Possessive + Noun ဆိုတဲ့ Pattern ကို မှတ်ပါ! I → MY, He → HIS, She → HER — ဒါ Conversation မှာ အမြဲ သုံးပါတယ်!"},
+
+{title:"Slide 2: Family Vocabulary + Usage",
+sections:[
+{title:"Family Members — မိသားစုဝင်များ 👨‍👩‍👧‍👦",content:"Father — အဖေ       Mother — အမေ\nBrother — ညီ/အစ်ကို  Sister — ညီမ/အစ်မ\nSon — သားယောက်ျား   Daughter — သမီးမ\nGrandfather — အဘိုး  Grandmother — အဘွား\nUncle — ဦးလေး/ဘကြီး  Aunt — အရှေ/ဆရာမ"},
+{title:"Family + Possessives 💬",content:"✅ My father is a doctor.\n✅ Her mother is a teacher.\n✅ His brother is 15 years old.\n✅ Our grandmother is kind.\n\nQuestion: Who is she?\nAnswer: She is MY sister.\n\nQuestion: What is his name?\nAnswer: His name is Leo."}
+],tip:"Family ဆိုတာ A1 English မှာ အကြာင်းများဆုံး Topic တစ်ခုပါ! ကိုယ့် မိသားစုကို English နဲ့ မိတ်ဆက်ပေးနိုင်ဖို့ ဒီသင်ခန်းစာ ကောင်းကောင်း မှတ်ပါ!"}
+],
+questionPool:[
+{type:"mcq",q:"I → ___?",emoji:"👤",choices:["Your","His","My","Our"],answer:2,explain:"I → MY ✅"},
+{type:"mcq",q:"She → ___?",emoji:"👩",choices:["His","Her","Your","Its"],answer:1,explain:"She → HER ✅"},
+{type:"mcq",q:"They → ___?",emoji:"👥",choices:["Our","His","Your","Their"],answer:3,explain:"They → THEIR ✅"},
+{type:"mcq",q:"'___ name is Leo.' ဖြည့်ပါ",emoji:"🏷️",choices:["I","Me","My","Mine"],answer:2,explain:"Possessive + Noun → MY name ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ဒါ ငါ့ မေမေပဲ'",sub:"",words:["my","This","mother.","is"],answer:["This","is","my","mother."],explain:"This is my mother ✅"},
+{type:"mcq",q:"'His book' ဆိုတာ?",emoji:"📚",choices:["ငါ့ စာအုပ်","မင်း့ စာအုပ်","သူ့ စာအုပ်","သူမ့် စာအုပ်"],answer:2,explain:"His = သူ့ (male possessive) ✅"},
+{type:"mcq",q:"'father's sister' = ?",emoji:"👩",choices:["Grandmother","Uncle","Aunt","Sister"],answer:2,explain:"Father's sister = Aunt ✅"},
+{type:"mcq",q:"We → ___?",emoji:"👨‍👩‍👧‍👦",choices:["My","Their","Its","Our"],answer:3,explain:"We → OUR ✅"}
+]},
+
+// ─────────── LESSON 12: ADJECTIVES ───────────
+{id:11,title:"Adjectives — ဖော်ပြချက်များ",titleEn:"Describing Words & Opposites",icon:"🌡️",
+slides:[
+{title:"Slide 1: Size, Temperature & Condition",
+sections:[
+{title:"Adjectives — ဖော်ပြချက်စကားလုံးများ",content:"SIZE — အရွယ်\n  big/large ↔ small/little\n  tall/high ↔ short/low\n  long ↔ short · wide ↔ narrow\n\nTEMPERATURE — အပူချိန်\n  hot ↔ cold\n  warm ↔ cool\n\nCONDITION — အနေအထား\n  new ↔ old · clean ↔ dirty\n  fast ↔ slow · easy ↔ difficult"},
+{title:"Adjective Position Pattern",content:"Adjective + Noun:\n✅ a big house · a small dog\n✅ a hot day · a cold drink\n✅ a new car · an old book\n\nBe + Adjective:\n✅ The house is big.\n✅ The weather is hot.\n✅ This is easy."}
+],tip:"Adjectives ကို Noun ရဲ့ ရှေ့မှာ (a big house) ဒါမဟုတ် Be verb ရဲ့ နောက်မှာ (The house IS big) ထားနိုင်ပါတယ်!"},
+
+{title:"Slide 2: Feelings & Describing People",
+sections:[
+{title:"Feelings — ခံစားချက်များ 😊",content:"Happy ↔ Sad (ပျော်/ဝမ်းနည်း)\nAngry (ဒေါသ) ↔ Calm (ငြိမ်းအေး)\nTired (ပင်ပန်း) ↔ Energetic (အားပေါ့)\nHungry (ဗိုက်ဆာ) ↔ Full (ဝပြည့်)\nThirsty (ရေငတ်) ↔ Satisfied (ကျေနပ်)\nScared (ကြောက်) ↔ Brave (ရဲ)"},
+{title:"Describing People 👤",content:"Tall / Short (မြင့်/တောင့်)\nThin / Fat (ပိန်/ဝ)\nYoung / Old (ငယ်/အိုမင်း)\nBeautiful / Handsome (လှ/လှ)\nKind / Mean (ကြင်နာ/ဆိုး)\n\n✅ She is tall and kind.\n✅ He is young and energetic.\n✅ I'm tired today."}
+],tip:"Feelings ဖော်ပြတဲ့ Adjectives တွေကို မြန်မာဘာသာနဲ့ အတွဲ မှတ်ပါ! Happy=ပျော်, Sad=ဝမ်းနည်း, Angry=ဒေါသ — Daily Conversation မှာ အမြဲ သုံးရပါတယ်!"}
+],
+questionPool:[
+{type:"mcq",q:"'big' ရဲ့ Opposite?",emoji:"📏",choices:["tall","small","hot","fast"],answer:1,explain:"big ↔ small ✅"},
+{type:"mcq",q:"'hot' ရဲ့ Opposite?",emoji:"🌡️",choices:["warm","fast","cold","old"],answer:2,explain:"hot ↔ cold ✅"},
+{type:"mcq",q:"'Happy' မြန်မာလို?",emoji:"😊",choices:["ပင်ပန်း","ဝမ်းနည်း","ဗိုက်ဆာ","ပျော်ရွှင်"],answer:3,explain:"Happy = ပျော်ရွှင် ✅"},
+{type:"mcq",q:"Adjective ဘယ်မှာ ထားနိုင်တာ?",emoji:"📌",choices:["Noun ရဲ့ ရှေ့မှာ ပဲ","Be verb နောက်မှာ ပဲ","Noun ရဲ့ ရှေ့ ဒါမဟုတ် Be verb နောက်မှာ","Verb ရဲ့ ရှေ့မှာ ပဲ"],answer:2,explain:"Adjective = Noun ရဲ့ ရှေ့ (a big house) ဒါမဟုတ် Be verb နောက် (The house is big) ✅"},
+{type:"mcq",q:"'I am ___ today.' (ပင်ပန်းနေတယ်) ဖြည့်ပါ",emoji:"😴",choices:["hungry","happy","tired","angry"],answer:2,explain:"Tired = ပင်ပန်း → I am tired ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ဒီနေ့ ရာသီဥတု အများကြီး ပူတယ်'",sub:"",words:["very","The","is","today.","hot","weather"],answer:["The","weather","is","very","hot","today."],explain:"The weather is very hot today ✅"},
+{type:"mcq",q:"'old' ရဲ့ Opposite?",emoji:"🆕",choices:["big","fast","new","tall"],answer:2,explain:"old ↔ new ✅"},
+{type:"mcq",q:"'hungry' မြန်မာလို?",emoji:"🍔",choices:["ရေငတ်","ပင်ပန်း","ဗိုက်ဆာ","ပျော်"],answer:2,explain:"Hungry = ဗိုက်ဆာ ✅"}
+]},
+
+// ─────────── LESSON 13: THERE IS/ARE ───────────
+{id:12,title:"There is / There are",titleEn:"Talking About Existence",icon:"🏠",
+slides:[
+{title:"Slide 1: There is vs There are",
+sections:[
+{title:"There is / There are ဆိုတာ?",content:"'ရှိတယ်' ဒါမဟုတ် 'တွေ့နိုင်တယ်' ဆိုတာ ဖော်ပြဖို့ သုံးပါ\n\nThere IS + Singular (တစ်ခု/တစ်ယောက်)\n→ There is a book on the table.\n   (စားပွဲပေါ်မှာ စာအုပ်တစ်အုပ် ရှိတယ်)\n\nThere ARE + Plural (အများ)\n→ There are many students in the class.\n   (ရှိသမျှမှာ ကျောင်းသားများစွာ ရှိတယ်)"},
+{title:"ဥပမာများ",content:"Singular (is):\n✅ There is a cat under the chair.\n✅ There is a problem!\n✅ There is water in the bottle.\n\nPlural (are):\n✅ There are two cats in the garden.\n✅ There are many books here.\n✅ There are five students."}
+],tip:"IS = တစ်ခု (Singular), ARE = များ (Plural)! Count ကြည့်ပါ — ၁ ခုဆိုရင် IS, ၁ ထက်ပိုရင် ARE!"},
+
+{title:"Slide 2: Negative + Questions",
+sections:[
+{title:"Negative Form 🚫",content:"There IS NOT → There ISN'T\n   There isn't a pen here.\n   (ဒီမှာ ဘာလောင်းမှ မရှိဘူး)\n\nThere ARE NOT → There AREN'T\n   There aren't any students.\n   (ကျောင်းသား တစ်ယောက်မှ မရှိဘူး)\n\nUseful phrase:\nThere is nothing here. (ဒီမှာ ဘာမှ မရှိဘူး)"},
+{title:"Questions ❓",content:"Is there + singular?\n   Is there a toilet here? → Yes, there is. / No, there isn't.\n\nAre there + plural?\n   Are there any students? → Yes, there are. / No, there aren't.\n\nHow many are there?\n   How many students are there?\n   → There are twenty students."}
+],tip:"Question = Is there...? / Are there...? Answer = Yes, there IS/ARE ✅ or No, there ISN'T/AREN'T ✅ — Short answers are enough!"}
+],
+questionPool:[
+{type:"mcq",q:"'There ___ a book.' ဖြည့်ပါ",emoji:"📚",choices:["are","have","is","am"],answer:2,explain:"Singular (a book) → There IS ✅"},
+{type:"mcq",q:"'There ___ many students.' ဖြည့်ပါ",emoji:"👥",choices:["is","am","has","are"],answer:3,explain:"Plural (many students) → There ARE ✅"},
+{type:"mcq",q:"'There isn't a pen.' ဆိုတာ?",emoji:"✏️",choices:["ဘာလောင်းတစ်ချောင်း ရှိတယ်","ဘာလောင်း မရှိဘူး","ဘာလောင်းများစွာ ရှိတယ်","ဘာမှ မသိ"],answer:1,explain:"There isn't = There is not = မရှိဘူး ✅"},
+{type:"mcq",q:"'Is there a bathroom?' → ဖြေပုံ?",emoji:"🚿",choices:["Yes, there have.","Yes, it is.","Yes, there is.","Yes, is there."],answer:2,explain:"Is there? → Yes, there IS ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ဘောင်းဘီကိုပေါ်မှာ နှစ်ကောင် ရှိတယ်'",sub:"",words:["the","There","cats","are","two","table.","on"],answer:["There","are","two","cats","on","the","table."],explain:"There are two cats on the table ✅"},
+{type:"mcq",q:"'There ___ water in the bottle.' ဖြည့်ပါ",emoji:"🍶",choices:["are","have","am","is"],answer:3,explain:"water = uncountable = singular → There IS ✅"},
+{type:"mcq",q:"'There aren't any chairs.' ← Negative of?",emoji:"🪑",choices:["There is a chair.","There are some chairs.","There is no chair.","There was a chair."],answer:1,explain:"There are some chairs → There aren't any chairs ✅"},
+{type:"mcq",q:"'___ there a problem?' ဖြည့်ပါ",emoji:"❓",choices:["Are","Have","Does","Is"],answer:3,explain:"Singular (a problem) → IS there? ✅"}
+]},
+
+// ─────────── LESSON 14: VOCABULARY ───────────
+{id:13,title:"Common Vocabulary",titleEn:"Food, Body & Daily Life",icon:"🍚",
+slides:[
+{title:"Slide 1: Food & Drinks — ကျွေးသောက်ဖွယ်",
+sections:[
+{title:"Food — အစားအစာ 🍽️",content:"Rice — ထမင်း        Bread — မုန့်\nNoodles — ခေါက်ဆွဲ  Soup — ဟင်းရည်\nMeat — အသား        Fish — ငါး\nVegetable — ဟင်းသီးဟင်းရွက်\nEgg — ကြက်ဥ        Fruit — အသီးအနှံ\nApple — ပန်းသီး     Banana — ငှက်ပျောသီး"},
+{title:"Drinks — သောက်ဖွယ် 🥤",content:"Water — ရေ           Tea — လက်ဖက်ရည်\nCoffee — ကော်ဖီ     Milk — နို့\nJuice — ဖျော်ရည်    Beer — ဘီယာ\n\nUseful phrases:\nI want rice, please. (ထမင်းတောင်းတယ်)\nI don't eat meat. (ငါ အသားမစားဘူး)\nI like coffee. (ငါ ကော်ဖီ ကြိုက်တယ်)"}
+],tip:"Food vocabulary တွေကို မှတ်ဖို့ Restaurants မှာ Menu ဖတ်ကြည့်ပါ! English Menu ဖတ်တတ်ရင် Ordering လုပ်နိုင်ပါတယ်!"},
+
+{title:"Slide 2: Body Parts & Daily Life",
+sections:[
+{title:"Body Parts — ကိုယ်ခန္ဓာ 🧍",content:"Head — ဦးခေါင်း    Face — မျက်နှာ\nEye — မျက်စိ       Ear — နား\nNose — နှာခေါင်း   Mouth — ပါး/ပါးစပ်\nHand — လက်         Arm — လက်မောင်း\nLeg — ခြေ/ခြေထောက်  Foot — ခြေဖဝါး\nHair — ဆံပင်        Back — ကျောပြင်"},
+{title:"Daily Life Words 📅",content:"Home — အိမ်         School — ကျောင်း\nWork — အလုပ်        Market — ဈေး\nHospital — ဆေးရုံ   Road — လမ်း\nBus — ဘတ်စ်ကား     Car — ကား\nPhone — ဖုန်း       Computer — ကွန်ပျူတာ\nMoney — ပိုက်ဆံ    Book — စာအုပ်"}
+],tip:"Body parts vocabulary ဟာ Doctor မှာ ရောဂါဖော်ပြဖို့ အသုံးဝင်ပါတယ်! 'My head hurts' (ဦးခေါင်းကိုက်တယ်) ← ဒါ ဆေးဆိုင်မှာ သုံးနိုင်!"}
+],
+questionPool:[
+{type:"mcq",q:"'Rice' မြန်မာလို?",emoji:"🍚",choices:["မုန့်","ထမင်း","ဟင်းရည်","ငါး"],answer:1,explain:"Rice = ထမင်း ✅"},
+{type:"mcq",q:"'Water' မြန်မာလို?",emoji:"💧",choices:["နို့","ဖျော်ရည်","ရေ","ကော်ဖီ"],answer:2,explain:"Water = ရေ ✅"},
+{type:"mcq",q:"'ကြက်ဥ' ကို အင်္ဂလိပ်လို?",emoji:"🥚",choices:["Meat","Fish","Egg","Bread"],answer:2,explain:"ကြက်ဥ = Egg ✅"},
+{type:"mcq",q:"'မျက်စိ' = ?",emoji:"👁️",choices:["Ear","Eye","Nose","Mouth"],answer:1,explain:"မျက်စိ = Eye ✅"},
+{type:"mcq",q:"'Hospital' မြန်မာလို?",emoji:"🏥",choices:["ကျောင်း","ဈေး","အိမ်","ဆေးရုံ"],answer:3,explain:"Hospital = ဆေးရုံ ✅"},
+{type:"tap",q:"ဝါကျ စီပါ — 'ငါ ကော်ဖီ ကြိုက်တယ်'",sub:"",words:["coffee.","I","like"],answer:["I","like","coffee."],explain:"I like coffee ✅"},
+{type:"mcq",q:"'Banana' မြန်မာလို?",emoji:"🍌",choices:["ပန်းသီး","ငှက်ပျောသီး","လိမ္မော်သီး","မက်မွန်"],answer:1,explain:"Banana = ငှက်ပျောသီး ✅"},
+{type:"mcq",q:"'ဆံပင်' ကို?",emoji:"💇",choices:["Back","Foot","Hair","Hand"],answer:2,explain:"ဆံပင် = Hair ✅"}
+]},
+
+// ─────────── LESSON 15: FINAL BOSS ───────────
+{id:14,title:"FINAL BOSS FIGHT 🏆",titleEn:"A1 Complete Master Test",icon:"👑",isBoss:true,
+slides:[
+{title:"🏆 THE FINAL BOSS FIGHT",
+sections:[
+{title:"ဒီ Test မှာ ဘာတွေ ပါမလဲ?",content:"✅ Greetings & Introductions\n✅ Numbers & Spelling\n✅ Colors, Shapes & Adjectives\n✅ In / On / At\n✅ A vs An\n✅ Am / Is / Are\n✅ WH Questions\n✅ Simple Present Tense\n✅ Can / Can't\n✅ Possessives & Vocabulary\n\nTotal: 10 Questions · All Mixed!"},
+{title:"Level Check — ကိုယ့်ကိုကိုယ် တိုင်းတာပါ",content:"⭐⭐⭐ = 9–10 correct → A1 MASTER!\n⭐⭐   = 7–8 correct → A1 Graduate!\n⭐     = 5–6 correct → Almost There!\n\n5 ↓     = Review lessons again\n\n'The first step to fluency is\nbelieving you can do it.' — Mr. Leo\n\nYou've got this! မင်းနိုင်ပါတယ်! 💪"}
+],tip:"ဒီထိ ရောက်လာနိုင်ခဲ့တယ်! Mr. Leo တကယ် ဂုဏ်ယူပါတယ်! A1 ၁၄ Lessons ကို ဖြတ်ခဲ့ပြီ — ဒါဟာ ကြီးမားသော Achievement ပါ! ကြိုးစားပါ! 🏆"}
+],
+questionPool:[
+{type:"mcq",q:"'Good Morning' ကဘယ်အချိန်? ",emoji:"🌅",choices:["ညနေ ၆ နာရီ","မနက် ၁၀ နာရီ","ညနေ ၉ နာရီ","အိပ်ရာဝင်ကာ"],answer:1,explain:"Good Morning = ၅AM–၁₂PM ✅"},
+{type:"mcq",q:"40 ကို?",emoji:"4️⃣0️⃣",choices:["fourty","fortty","forty","fort"],answer:2,explain:"40 = Forty (u ပျောက်!) ✅"},
+{type:"mcq",q:"'An' ကို ဘာ့ကြောင့် သုံးတာ?",emoji:"🔤",choices:["ကြိုက်တဲ့ အချိန် သုံးပါ","Vowel Sound ရဲ့ ရှေ့မှာ","Consonant Sound ရဲ့ ရှေ့မှာ","Noun ရဲ့ နောက်မှာ"],answer:1,explain:"AN = Vowel Sound ရဲ့ ရှေ့မှာ သုံးပါ ✅"},
+{type:"mcq",q:"'___ Monday morning.' ဖြည့်ပါ",emoji:"📅",choices:["In","At","On","By"],answer:2,explain:"နေ့ → ON Monday ✅"},
+{type:"mcq",q:"'She ___ beautiful.' ဖြည့်ပါ",emoji:"🌟",choices:["am","is","are","be"],answer:1,explain:"She → IS ✅"},
+{type:"mcq",q:"'Where ___ you?' ဖြည့်ပါ",emoji:"📍",choices:["am","is","are","be"],answer:2,explain:"Where ARE you? ✅ (NOT 'Where you are?')"},
+{type:"mcq",q:"'I ___ English every day.' ဖြည့်ပါ",emoji:"📚",choices:["studies","studying","study","studyed"],answer:2,explain:"I/You/We/They + base form → I study ✅"},
+{type:"mcq",q:"'She speaks' → 3rd person ဖြစ်ရတာ?",emoji:"🗣️",choices:["She = They နဲ့ တူ","He/She/It မှာ +s ထည့်ရ","Can ဆိုတဲ့ modal ပါ","Subject ကြီးတယ်"],answer:1,explain:"He/She/It → +s/-es/-ies ✅"},
+{type:"mcq",q:"'I can't ___.' မှန်တာ?",emoji:"💪",choices:["drives","driving","drove","drive"],answer:3,explain:"can't + BASE form → can't drive ✅"},
+{type:"mcq",q:"'There ___ a problem.' ဖြည့်ပါ",emoji:"❗",choices:["are","have","is","am"],answer:2,explain:"Singular → There IS ✅"}
+]}
+
+]; // END LESSONS
+
+// =====================================================
+// STATE
+// =====================================================
+let state = {
+  xp:0, hearts:3,
+  lessonProgress:{},
+  currentLesson:null,
+  currentStep:0,
+  correctCount:0,
+  showingLearn:true,
+  currentSlide:0,
+  selectedAnswer:null,
+  tapAnswer:[],
+  selectedQuestions:[],
+  totalQuestionsInSession:5
+};
+
+function save(){try{localStorage.setItem('mrleo_v2',JSON.stringify({xp:state.xp,hearts:state.hearts,lessonProgress:state.lessonProgress}));}catch(e){}}
+function load(){try{const s=localStorage.getItem('mrleo_v2');if(s){const d=JSON.parse(s);state.xp=d.xp||0;state.hearts=d.hearts!==undefined?d.hearts:3;state.lessonProgress=d.lessonProgress||{};}}catch(e){}}
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function pickQuestions(pool,count){
+  const bossCount=10;
+  const n=pool[0]&&pool[0].q?count:count;
+  return shuffle(pool).slice(0,Math.min(n,pool.length));
+}
+
+// =====================================================
+// INIT
+// =====================================================
+window.onload=()=>{
+  load();
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(()=>{
+      document.getElementById('splash').style.display='none';
+      document.getElementById('app').classList.add('visible');
+      renderHome();
+    },800);
+  },2600);
+};
+
+// =====================================================
+// HOME
+// =====================================================
+function renderHome(){
+  showScreen('home');updateHeader();
+  const map=document.getElementById('lessonMap');
+  map.innerHTML='';
+  LESSONS.forEach((lesson,i)=>{
+    const prog=state.lessonProgress[lesson.id];
+    const done=prog&&prog.done;
+    const prevDone=i===0||(state.lessonProgress[i-1]&&state.lessonProgress[i-1].done);
+    const locked=!prevDone;
+    const active=prevDone&&!done;
+    const stars=prog?prog.stars:0;
+    const isBoss=lesson.isBoss;
+    const node=document.createElement('div');
+    node.className='lesson-node';
+    node.innerHTML=`
+      ${i>0?'<div class="connector"></div>':''}
+      <button class="lesson-btn ${done?'done':active?'active':locked?'locked':''} ${isBoss?'boss':''}"
+        onclick="${locked?'':`startLesson(${lesson.id})`}" ${locked?'disabled':''}>
+        <div class="lesson-icon">${lesson.icon}</div>
+        <div class="lesson-info">
+          <div class="lesson-num">${isBoss?'FINAL BOSS':'LESSON '+(i+1)}</div>
+          <div class="lesson-name">${lesson.title}</div>
+          <div class="lesson-name-en">${lesson.titleEn}</div>
+          ${done?`<div class="stars-row">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}
+        </div>
+        <div class="lesson-status">${done?'✅':locked?'🔒':isBoss?'👑':'▶️'}</div>
+      </button>`;
+    map.appendChild(node);
+  });
+}
+
+function showScreen(name){
+  document.getElementById('screen-home').style.display=name==='home'?'block':'none';
+  const sl=document.getElementById('screen-lesson');
+  if(name==='lesson'){sl.style.display='block';sl.classList.add('visible');}
+  else{sl.style.display='none';sl.classList.remove('visible');}
+  const sc=document.getElementById('screen-complete');
+  if(name==='complete'){sc.style.display='block';sc.classList.add('visible');}
+  else{sc.style.display='none';sc.classList.remove('visible');}
+}
+function goHome(){renderHome();}
+
+// =====================================================
+// START LESSON
+// =====================================================
+function startLesson(id){
+  const lesson=LESSONS.find(l=>l.id===id);
+  state.currentLesson=id;
+  state.currentStep=0;
+  state.correctCount=0;
+  state.showingLearn=true;
+  state.currentSlide=0;
+  state.selectedAnswer=null;
+  state.tapAnswer=[];
+  const qCount=lesson.isBoss?10:5;
+  state.selectedQuestions=shuffle(lesson.questionPool).slice(0,Math.min(qCount,lesson.questionPool.length));
+  state.totalQuestionsInSession=state.selectedQuestions.length;
+  showScreen('lesson');
+  updateProgress(0,state.totalQuestionsInSession);
+  if(lesson.isBoss){renderBossIntro(lesson);}
+  else{renderLearnSlide();}
+}
+
+function retryLesson(){
+  if(state.currentLesson===null)return;
+  startLesson(state.currentLesson);
+}
+
+// =====================================================
+// LEARN SLIDES
+// =====================================================
+function renderLearnSlide(){
+  const lesson=LESSONS.find(l=>l.id===state.currentLesson);
+  const slide=lesson.slides[state.currentSlide];
+  const isLast=state.currentSlide===lesson.slides.length-1;
+  const area=document.getElementById('questionArea');
+  const dots=lesson.slides.map((_,i)=>`<div class="slide-dot ${i===state.currentSlide?'active':''}"></div>`).join('');
+  area.innerHTML=`
+    <div class="learn-card">
+      <div class="slide-meta">
+        <div class="slide-dots">${dots}</div>
+        <div class="slide-counter">${state.currentSlide+1} / ${lesson.slides.length}</div>
+      </div>
+      <h2>📖 ${slide.title}</h2>
+      ${slide.sections.map(s=>`<div class="learn-section"><h3>${s.title}</h3><p>${s.content}</p></div>`).join('')}
+      ${slide.tip?`<div class="leo-tip"><div class="leo-tip-label">⚡ LEO'S PRO TIP</div><p>${slide.tip}</p></div>`:''}
+      <div class="slide-nav">
+        ${state.currentSlide>0?`<button class="slide-prev-btn" onclick="prevSlide()">← ယခင်</button>`:'<div style="flex:1"></div>'}
+        ${isLast
+          ?`<button class="got-it-btn" onclick="startQuestions()">မေးခွန်းကို စဖြေမယ် →</button>`
+          :`<button class="slide-next-btn" onclick="nextSlide()">နောက်သို့ →</button>`
+        }
+      </div>
+    </div>`;
+}
+
+function renderBossIntro(lesson){
+  const area=document.getElementById('questionArea');
+  const slide=lesson.slides[state.currentSlide];
+  const isLast=state.currentSlide===lesson.slides.length-1;
+  const dots=lesson.slides.map((_,i)=>`<div class="slide-dot ${i===state.currentSlide?'active':''}"></div>`).join('');
+  area.innerHTML=`
+    <div class="boss-intro">
+      <div style="font-size:3.5rem">👑</div>
+      <div class="boss-title">${slide.title}</div>
+      ${slide.sections.map(s=>`<div class="boss-rules"><p><strong style="color:var(--gold)">${s.title}</strong><br><br><span style="white-space:pre-line">${s.content}</span></p></div>`).join('')}
+      ${slide.tip?`<div class="leo-tip" style="margin-top:14px"><div class="leo-tip-label">⚡ LEO'S FINAL MESSAGE</div><p>${slide.tip}</p></div>`:''}
+      <div class="slide-nav" style="margin-top:18px">
+        ${state.currentSlide>0?`<button class="slide-prev-btn" onclick="prevSlide()">← ယခင်</button>`:'<div style="flex:1"></div>'}
+        ${isLast
+          ?`<button class="got-it-btn" onclick="startQuestions()" style="background:linear-gradient(135deg,#b06aff,#6020a0);box-shadow:0 4px 16px #b06aff44">⚔️ FIGHT START!</button>`
+          :`<button class="slide-next-btn" onclick="nextSlide()">နောက်သို့ →</button>`
+        }
+      </div>
+    </div>`;
+}
+
+function nextSlide(){
+  state.currentSlide++;
+  const lesson=LESSONS.find(l=>l.id===state.currentLesson);
+  if(lesson.isBoss){renderBossIntro(lesson);}
+  else{renderLearnSlide();}
+}
+function prevSlide(){
+  if(state.currentSlide>0){state.currentSlide--;}
+  const lesson=LESSONS.find(l=>l.id===state.currentLesson);
+  if(lesson.isBoss){renderBossIntro(lesson);}
+  else{renderLearnSlide();}
+}
+function startQuestions(){state.showingLearn=false;renderQuestion();}
+
+// =====================================================
+// QUESTIONS
+// =====================================================
+function renderQuestion(){
+  const q=state.selectedQuestions[state.currentStep];
+  updateProgress(state.currentStep,state.totalQuestionsInSession);
+  state.selectedAnswer=null;state.tapAnswer=[];
+  const area=document.getElementById('questionArea');
+  area.innerHTML='';
+  if(q.type==='mcq')renderMCQ(q,area);
+  else if(q.type==='tap')renderTap(q,area);
+  else if(q.type==='fill')renderFill(q,area);
+}
+
+function renderMCQ(q,area){
+  area.innerHTML=`
+    <div class="q-card">
+      <div class="q-type-badge">မေးခွန်း ${state.currentStep+1}/${state.totalQuestionsInSession}</div>
+      <div class="q-text">${q.q}</div>
+      ${q.emoji?`<span class="q-emoji-big">${q.emoji}</span>`:''}
+      <div class="options-grid">
+        ${q.choices.map((c,i)=>`<button class="opt-btn" id="opt${i}" onclick="selectMCQ(${i})">${c}</button>`).join('')}
+      </div>
+    </div>
+    <div class="feedback-panel" id="feedbackPanel">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextStep()"></button>
+    </div>`;
+}
+
+function selectMCQ(i){
+  if(state.selectedAnswer!==null)return;
+  state.selectedAnswer=i;
+  const q=state.selectedQuestions[state.currentStep];
+  const correct=i===q.answer;
+  document.querySelectorAll('.opt-btn').forEach((btn,idx)=>{
+    btn.classList.add('answered');
+    if(idx===q.answer)btn.classList.add('correct');
+    else if(idx===i&&!correct)btn.classList.add('wrong');
+  });
+  showFeedback(correct,q.explain);
+  if(correct){state.correctCount++;spawnParticles();}else{loseHeart();}
+}
+
+function renderTap(q,area){
+  const shuffled=shuffle(q.words);
+  state.tapWords=shuffled;state.tapAnswer=[];
+  area.innerHTML=`
+    <div class="q-card">
+      <div class="q-type-badge">ဝါကျ စီပါ ${state.currentStep+1}/${state.totalQuestionsInSession}</div>
+      <div class="q-text">${q.q}</div>
+      ${q.sub?`<div class="q-sub">${q.sub}</div>`:''}
+      <div class="answer-tray" id="answerTray"><span style="color:#444;font-size:.78rem;font-family:'Space Grotesk',sans-serif">Word တွေကို ဒီမှာ Tap ပြီး ထည့်ပါ...</span></div>
+      <div class="word-bank" id="wordBank">
+        ${shuffled.map((w,i)=>`<button class="word-chip" id="chip${i}" onclick="tapWord(${i},'${w.replace(/'/g,"\\\'")}')">${w}</button>`).join('')}
+      </div>
+      <button class="check-btn" onclick="checkTap()">စစ်ဆေးပါ ✓</button>
+    </div>
+    <div class="feedback-panel" id="feedbackPanel">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextStep()"></button>
+    </div>`;
+}
+
+function tapWord(i,w){
+  const chip=document.getElementById(`chip${i}`);
+  if(chip.classList.contains('used'))return;
+  state.tapAnswer.push({word:w,chipId:i});
+  chip.classList.add('used');
+  updateTray();
+}
+function updateTray(){
+  const tray=document.getElementById('answerTray');
+  if(state.tapAnswer.length===0){tray.classList.remove('has-items');tray.innerHTML='<span style="color:#444;font-size:.78rem;font-family:\'Space Grotesk\',sans-serif">Word တွေကို ဒီမှာ Tap ပြီး ထည့်ပါ...</span>';return;}
+  tray.classList.add('has-items');
+  tray.innerHTML=state.tapAnswer.map((a,i)=>`<button class="answer-chip" onclick="removeTapWord(${i})">${a.word}</button>`).join('');
+}
+function removeTapWord(i){
+  const item=state.tapAnswer[i];
+  document.getElementById(`chip${item.chipId}`).classList.remove('used');
+  state.tapAnswer.splice(i,1);
+  updateTray();
+}
+function checkTap(){
+  const q=state.selectedQuestions[state.currentStep];
+  const correct=state.tapAnswer.map(a=>a.word).join(' ')===q.answer.join(' ');
+  showFeedback(correct,q.explain);
+  if(correct){state.correctCount++;spawnParticles();}else{loseHeart();}
+}
+
+function renderFill(q,area){
+  area.innerHTML=`
+    <div class="q-card">
+      <div class="q-type-badge">ဖြည့်ပါ ${state.currentStep+1}/${state.totalQuestionsInSession}</div>
+      <div class="q-text">${q.q}</div>
+      ${q.emoji?`<span class="q-emoji-big">${q.emoji}</span>`:''}
+      <div class="q-sub">💡 Hint: ${q.hint}</div>
+      <input class="fill-input" id="fillInput" placeholder="ဒီမှာ ရေးပါ..." autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill()">
+      <button class="check-btn" onclick="checkFill()">စစ်ဆေးပါ ✓</button>
+    </div>
+    <div class="feedback-panel" id="feedbackPanel">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextStep()"></button>
+    </div>`;
+}
+function checkFill(){
+  const q=state.selectedQuestions[state.currentStep];
+  const input=document.getElementById('fillInput');
+  const correct=input.value.trim().toLowerCase()===q.answer.toLowerCase();
+  input.classList.add(correct?'correct-input':'wrong-input');
+  showFeedback(correct,q.explain);
+  if(correct){state.correctCount++;spawnParticles();}else{loseHeart();}
+}
+
+// =====================================================
+// FEEDBACK & NEXT
+// =====================================================
+function showFeedback(correct,explain){
+  const panel=document.getElementById('feedbackPanel');
+  const title=document.getElementById('feedbackTitle');
+  const text=document.getElementById('feedbackText');
+  const btn=document.getElementById('nextBtn');
+  panel.className=`feedback-panel ${correct?'correct':'wrong'}`;
+  title.textContent=correct?'🎉 မှန်ပါတယ်! Excellent!':'❌ မမှန်ပါ — ဒါကြည့်ပါ:';
+  text.textContent=explain;
+  btn.className=`next-btn ${correct?'correct':'wrong'}`;
+  btn.textContent='CONTINUE →';
+  if(correct){state.xp+=10;}
+  updateHeader();save();
+}
+function nextStep(){
+  state.currentStep++;
+  if(state.currentStep>=state.totalQuestionsInSession)completeLesson();
+  else renderQuestion();
+}
+
+// =====================================================
+// COMPLETE
+// =====================================================
+function completeLesson(){
+  const lesson=LESSONS.find(l=>l.id===state.currentLesson);
+  const total=state.totalQuestionsInSession;
+  const pct=state.correctCount/total;
+  const stars=pct>=0.9?3:pct>=0.6?2:1;
+  const xpEarned=state.correctCount*10;
+  if(!state.lessonProgress[lesson.id]||stars>(state.lessonProgress[lesson.id].stars||0)){
+    state.lessonProgress[lesson.id]={done:true,stars};
+  }
+  save();updateHeader();showScreen('complete');
+  const isBoss=lesson.isBoss;
+  document.getElementById('completeIcon').textContent=stars===3?(isBoss?'👑':'🏆'):stars===2?'🌟':'✅';
+  document.getElementById('completeTitle').textContent=isBoss?'A1 MASTER! 👑':stars===3?'PERFECT! 🎉':'LESSON COMPLETE!';
+  document.getElementById('completeSubtitle').textContent=isBoss
+    ?`A1 Complete Guide ကို ဖြတ်သန်းနိုင်ခဲ့ပါပြီ! Mr. Leo တကယ် ဂုဏ်ယူပါတယ်! 🎊`
+    :stars===3?`Lesson ${lesson.id+1} ကို ပြည့်ပြည့်ဝဝ ဖြေဆိုနိုင်ပါတယ်! Mr. Leo ဂုဏ်ယူပါတယ်!`
+    :stars===2?`ကောင်းပါတယ်! Retry နဲ့ ⭐⭐⭐ ရောက်အောင် ကြိုးစားပါ!`
+    :`မေးခွန်းသစ်တွေနဲ့ Retry ဖြင့် ထပ်ကြိုးစားပါ! You can do it!`;
+  document.getElementById('statCorrect').textContent=`${state.correctCount}/${total}`;
+  document.getElementById('statXP').textContent=`+${xpEarned}`;
+  document.getElementById('statStars').textContent='⭐'.repeat(stars);
+  document.getElementById('retryBtn').style.display=isBoss?'none':'block';
+  for(let i=0;i<18;i++)setTimeout(()=>spawnParticles(),i*70);
+}
+
+// =====================================================
+// UTILS
+// =====================================================
+function updateHeader(){
+  const maxXp=LESSONS.length*5*10;
+  document.getElementById('xpFill').style.width=Math.min(100,(state.xp/maxXp)*100)+'%';
+  document.getElementById('xpVal').textContent=state.xp;
+  document.querySelectorAll('.heart').forEach((h,i)=>h.classList.toggle('lost',i>=state.hearts));
+}
+function loseHeart(){if(state.hearts>0)state.hearts--;updateHeader();save();}
+function updateProgress(step,total){
+  document.getElementById('progressFill').style.width=(total>0?(step/total)*100:0)+'%';
+  document.getElementById('progressLabel').textContent=`${step} / ${total}`;
+}
+function spawnParticles(){
+  const emojis=['⭐','✨','🎉','🌟','💫','🔥','👑','💛','🏆'];
+  const container=document.getElementById('particles');
+  for(let i=0;i<4;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=Math.random()*100+'vw';
+    p.style.top=(40+Math.random()*40)+'vh';
+    p.style.animationDelay=(Math.random()*.25)+'s';
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),1200);
+  }
+}
+</script>
+</body>
+</html>
